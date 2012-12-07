@@ -16,9 +16,9 @@ import java.io.File;
 public class SyncConfiguration extends Configuration {
     @NotEmpty
     @JsonProperty
-    private File photoFolder = new File(System.getProperty("user.home") + File.separator + "SuperCoolPhotoSync Photos");
+    private String folder = System.getProperty("user.home") + File.separator + "SuperCoolPhotoSync Photos";
 
-    public File getPhotoFolder() {
-        return photoFolder;
+    public String getFolder() {
+        return folder;
     }
 }

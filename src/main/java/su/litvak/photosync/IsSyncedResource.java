@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.io.File;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,9 +20,15 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class IsSyncedResource {
 
+    private String folder;
+
+    public IsSyncedResource(String folder) {
+        this.folder = folder;
+    }
+
     @GET
     @Timed
     public boolean isSynced(@QueryParam("fileName") String fileName) {
-        return true;
+        return new File(folder, fileName).exists();
     }
 }

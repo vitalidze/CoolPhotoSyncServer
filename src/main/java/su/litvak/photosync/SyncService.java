@@ -24,6 +24,6 @@ public class SyncService extends Service<SyncConfiguration> {
 
     @Override
     public void run(SyncConfiguration syncConfiguration, Environment environment) throws Exception {
-        environment.addResource(new IsSyncedResource());
+        environment.addResource(new IsSyncedResource(syncConfiguration.getFolder()));
     }
 }
