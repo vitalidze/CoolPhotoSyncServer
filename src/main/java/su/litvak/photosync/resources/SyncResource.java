@@ -1,10 +1,22 @@
-package su.litvak.photosync;
+/*
+ * (C) Copyright 2013 Vitaly Litvak (http://litvak.su/).
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser General Public License
+ * (LGPL) version 2.1 which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/lgpl-2.1.html
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
+package su.litvak.photosync.resources;
 
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
-import com.yammer.metrics.annotation.Timed;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,25 +27,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Admin
- * Date: 8/12/12
- * Time: 10:06 PM
- * To change this template use File | Settings | File Templates.
- */
 @Path("/sync")
 @Produces(MediaType.APPLICATION_JSON)
 public class SyncResource {
-    private String folder;
     private Logger logger = LoggerFactory.getLogger(SyncResource.class);
 
-    public SyncResource(String folder) {
-        this.folder = folder;
-    }
-
     @POST
-    @Timed
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response sync(
             @FormDataParam("file") final InputStream stream,
@@ -46,7 +45,7 @@ public class SyncResource {
                 public InputStream getInput() throws IOException {
                     return stream;
                 }
-            }, new File(folder, fileDetail.getFileName()));
+            }, new File(fileDetail.getFileName()));
         } catch (IOException ioex) {
             logger.error("Error while copying file", ioex);
         }
