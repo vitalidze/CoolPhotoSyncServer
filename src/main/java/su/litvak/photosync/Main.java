@@ -15,25 +15,15 @@ package su.litvak.photosync;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.glassfish.jersey.filter.LoggingFilter;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
-
-import java.util.logging.Logger;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Server server = new Server(8081);
+        Server server = new Server(Config.get().getPort());
         ServletContextHandler context = new ServletContextHandler();
-        ServletContainer jerseyContainer = new ServletContainer(new ResourceConfig()
-                .packages(false, "su.litvak.photosync.resources")
-                .register(MultiPartFeature.class)
-                .register(LoggingFilter.class)
-        );
-        ServletHolder servletHolder = new ServletHolder(jerseyContainer);
+        ServletHolder servletHolder = new ServletHolder(new ServletContainer());
+        servletHolder.setInitParameter("javax.ws.rs.Application", SyncApplication.class.getName());
         context.addServlet(servletHolder, "/*");
         server.setHandler(context);
         server.start();

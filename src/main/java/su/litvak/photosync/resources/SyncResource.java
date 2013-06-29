@@ -19,7 +19,10 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import su.litvak.photosync.Config;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,8 +32,10 @@ import java.io.InputStream;
 
 @Path("/sync")
 @Produces(MediaType.APPLICATION_JSON)
+@Singleton
 public class SyncResource {
     private Logger logger = LoggerFactory.getLogger(SyncResource.class);
+    private @Inject Config config;
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -45,7 +50,7 @@ public class SyncResource {
                 public InputStream getInput() throws IOException {
                     return stream;
                 }
-            }, new File(fileDetail.getFileName()));
+            }, new File(config.getPicturesFolder(), fileDetail.getFileName()));
         } catch (IOException ioex) {
             logger.error("Error while copying file", ioex);
         }

@@ -13,6 +13,10 @@
  */
 package su.litvak.photosync.resources;
 
+import su.litvak.photosync.Config;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,10 +26,12 @@ import java.io.File;
 
 @Path("/is_synced")
 @Produces(MediaType.APPLICATION_JSON)
+@Singleton
 public class IsSyncedResource {
+    private @Inject Config config;
 
     @GET
     public boolean isSynced(@QueryParam("fileName") String fileName) {
-        return false;
+        return new File(config.getPicturesFolder(), fileName).exists();
     }
 }
