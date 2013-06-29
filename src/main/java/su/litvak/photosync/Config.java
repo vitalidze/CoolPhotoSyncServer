@@ -74,7 +74,7 @@ public class Config {
     public File getPicturesFolder() {
         File picturesDir = new File(getPicturesPath());
         if (!picturesDir.exists())  {
-            picturesDir.mkdir();
+            picturesDir.mkdirs();
         }
         return picturesDir;
     }
