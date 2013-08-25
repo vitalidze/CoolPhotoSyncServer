@@ -19,6 +19,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,11 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         /**
+         * Init logging bridge
+         */
+        initLogging();
+
+        /**
          * Init tray
          */
         initTray();
@@ -40,6 +46,19 @@ public class Main {
          * Start jetty
          */
         start();
+    }
+
+    /**
+     * Configures JUL to slf4j bridge
+     */
+    private static void initLogging() {
+        java.util.logging.Logger rootLogger =
+                java.util.logging.LogManager.getLogManager().getLogger("");
+        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
+        for (int i = 0; i < handlers.length; i++) {
+            rootLogger.removeHandler(handlers[i]);
+        }
+        SLF4JBridgeHandler.install();
     }
 
     private static void initTray() {
@@ -147,6 +166,7 @@ public class Main {
     }
 
     private static void start() throws Exception {
+        logger.info("Starting server...");
         server = new Server(Config.get().getPort());
         ServletContextHandler context = new ServletContextHandler();
         ServletHolder servletHolder = new ServletHolder(new ServletContainer());
@@ -157,6 +177,7 @@ public class Main {
     }
 
     private static void stop() throws Exception {
+        logger.info("Stopping server...");
         server.stop();
         server = null;
     }
